@@ -11,9 +11,10 @@ import (
 
 	"github.com/gomvn/gomvn/internal/config"
 	"github.com/gomvn/gomvn/internal/service"
+	"github.com/gomvn/gomvn/internal/service/user"
 )
 
-func New(conf *config.App, storage *service.Storage) *Server {
+func New(conf *config.App, storage *service.Storage, us *user.Service) *Server {
 	app := fiber.New()
 	app.Settings.IdleTimeout = time.Second * 5
 	app.Settings.DisableStartupMessage = true
@@ -25,10 +26,16 @@ func New(conf *config.App, storage *service.Storage) *Server {
 	server := &Server{
 		app:        app,
 		name:       conf.Name,
-		storage:    storage,
 		listen:     conf.Server.GetListenAddr(),
 		repository: conf.Repository,
+		storage:    storage,
+		us:         us,
 	}
+
+	api := app.Group("/api")
+	api.Post("/users", server.handleApiPostUsers)
+	api.Put("/users/:id", server.handleApiPutUsers)
+	api.Get("/users/:id/token", server.handleApiGetUsersToken)
 
 	app.Put("/*", server.handlePut)
 	app.Get("/", server.handleIndex)
@@ -42,9 +49,10 @@ func New(conf *config.App, storage *service.Storage) *Server {
 type Server struct {
 	app        *fiber.App
 	name       string
-	storage    *service.Storage
 	listen     string
 	repository []string
+	storage    *service.Storage
+	us         *user.Service
 }
 
 func (s *Server) Listen() error {

@@ -1,6 +1,14 @@
 package entity
 
+import (
+	"time"
+)
+
 type User struct {
-	Id        string `gorm:"primary_key;size:36;not null"`
-	TokenHash string `gorm:"primary_key;size:60;not null"`
+	ID        uint      `gorm:"primary_key"`
+	Name      string    `gorm:"unique;size:36;not null"`
+	Admin     bool      `gorm:"not null"`
+	TokenHash string    `gorm:"size:60;not null"`
+	CreatedAt time.Time `gorm:"not null"`
+	UpdatedAt time.Time `gorm:"not null"`
 }

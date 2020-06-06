@@ -6,6 +6,7 @@ import (
 	"go.uber.org/fx"
 
 	"github.com/gomvn/gomvn/internal/config"
+	"github.com/gomvn/gomvn/internal/database"
 	"github.com/gomvn/gomvn/internal/server"
 	"github.com/gomvn/gomvn/internal/service"
 )
@@ -17,6 +18,7 @@ func main() {
 	app := fx.New(
 		fx.NopLogger,
 		config.Module(*cf),
+		database.Module,
 		service.Module,
 		server.Module,
 	)
