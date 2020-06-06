@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log"
 	"strings"
 
 	"github.com/gofiber/fiber"
@@ -23,12 +24,14 @@ func NewRepoAuth(us *user.Service, ps *service.PathService, needsDeploy bool) fu
 			}
 
 			_, current, _, err := ps.ParsePathParts(c)
-			if err != nil {
+			if err != nil && needsDeploy {
+				log.Printf("path error: %v", err)
 				return false
 			}
 
 			paths, err := us.GetPaths(u)
 			if err != nil {
+				log.Printf("cannot fetch user paths: %v", err)
 				return false
 			}
 
@@ -39,6 +42,7 @@ func NewRepoAuth(us *user.Service, ps *service.PathService, needsDeploy bool) fu
 				}
 			}
 
+			log.Printf("not found allowed path for '%s', user paths: %v", current, paths)
 			return false
 		},
 	})

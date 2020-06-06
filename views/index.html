@@ -1,8 +1,21 @@
 <html>
 <head>
     <title>GoMVN - {{.Name}}</title>
+    <style>
+        .dir {
+            font-weight: bold;
+            font-family: monospace;
+        }
+    </style>
 </head>
 <body>
 <h1>{{.Name}}</h1>
+{{range $k, $v := .Repositories}}
+    <ul>
+        {{range $v}}
+        <li><a href="{{ $k }}/{{ .GetPath }}" class="dir">{{ .Group }}:{{ .Artifact }}:{{ .Version }}</a>, last modified {{ .Modified }}</li>
+        {{end}}
+    </ul>
+{{end}}
 </body>
 </html>

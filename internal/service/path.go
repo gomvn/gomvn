@@ -39,7 +39,7 @@ func (s *PathService) NormalizePath(path string) string {
 
 func (s *PathService) ParsePath(c *fiber.Ctx) (string, error) {
 	path := s.NormalizePath(c.Path())
-	if strings.Count(path, "/") < 2 {
+	if strings.Count(path, "/") < 3 {
 		return "", fmt.Errorf("path should be repository/group/artifact")
 	}
 	return path, nil

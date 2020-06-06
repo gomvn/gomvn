@@ -15,7 +15,7 @@ import (
 	"github.com/gomvn/gomvn/internal/service/user"
 )
 
-func New(conf *config.App, ps *service.PathService, storage *service.Storage, us *user.Service) *Server {
+func New(conf *config.App, ps *service.PathService, storage *service.Storage, us *user.Service, rs *service.RepoService) *Server {
 	app := fiber.New()
 	app.Settings.IdleTimeout = time.Second * 5
 	app.Settings.DisableStartupMessage = true
@@ -31,6 +31,7 @@ func New(conf *config.App, ps *service.PathService, storage *service.Storage, us
 		ps:      ps,
 		storage: storage,
 		us:      us,
+		rs:      rs,
 	}
 
 	api := app.Group("/api")
@@ -57,6 +58,7 @@ type Server struct {
 	ps      *service.PathService
 	storage *service.Storage
 	us      *user.Service
+	rs      *service.RepoService
 }
 
 func (s *Server) Listen() error {
