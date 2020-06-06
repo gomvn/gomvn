@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Server) handlePut(c *fiber.Ctx) {
-	path, err := s.parsePath(c)
+	path, err := s.ps.ParsePath(c)
 	if err != nil {
 		c.Status(fiber.StatusBadRequest).SendString(err.Error())
 		return

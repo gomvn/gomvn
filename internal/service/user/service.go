@@ -28,3 +28,12 @@ func (s *Service) GetByName(name string) (*entity.User, error) {
 	}
 	return &user, nil
 }
+
+func (s *Service) GetPaths(user *entity.User) ([]entity.Path, error) {
+	var paths []entity.Path
+	q := s.db.Model(&entity.Path{}).Where("user_id = ?", user.ID).Find(&paths)
+	if err := q.Error; err != nil {
+		return nil, err
+	}
+	return paths, nil
+}

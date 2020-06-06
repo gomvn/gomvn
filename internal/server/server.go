@@ -15,7 +15,7 @@ import (
 	"github.com/gomvn/gomvn/internal/service/user"
 )
 
-func New(conf *config.App, storage *service.Storage, us *user.Service) *Server {
+func New(conf *config.App, ps *service.PathService, storage *service.Storage, us *user.Service) *Server {
 	app := fiber.New()
 	app.Settings.IdleTimeout = time.Second * 5
 	app.Settings.DisableStartupMessage = true
@@ -25,12 +25,12 @@ func New(conf *config.App, storage *service.Storage, us *user.Service) *Server {
 	app.Use(logger.New())
 
 	server := &Server{
-		app:        app,
-		name:       conf.Name,
-		listen:     conf.Server.GetListenAddr(),
-		repository: conf.Repository,
-		storage:    storage,
-		us:         us,
+		app:     app,
+		name:    conf.Name,
+		listen:  conf.Server.GetListenAddr(),
+		ps:      ps,
+		storage: storage,
+		us:      us,
 	}
 
 	api := app.Group("/api")
@@ -39,7 +39,7 @@ func New(conf *config.App, storage *service.Storage, us *user.Service) *Server {
 	api.Put("/users/:id", server.handleApiPutUsers)
 	api.Get("/users/:id/token", server.handleApiGetUsersToken)
 
-	app.Put("/*", server.handlePut)
+	app.Put("/*", middleware.NewPutAuth(us, ps), server.handlePut)
 	app.Get("/", server.handleIndex)
 	app.Static("/", storage.GetRoot(), fiber.Static{
 		Browse: true,
@@ -49,12 +49,12 @@ func New(conf *config.App, storage *service.Storage, us *user.Service) *Server {
 }
 
 type Server struct {
-	app        *fiber.App
-	name       string
-	listen     string
-	repository []string
-	storage    *service.Storage
-	us         *user.Service
+	app     *fiber.App
+	name    string
+	listen  string
+	ps      *service.PathService
+	storage *service.Storage
+	us      *user.Service
 }
 
 func (s *Server) Listen() error {

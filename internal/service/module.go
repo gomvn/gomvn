@@ -7,6 +7,7 @@ import (
 )
 
 var Module = fx.Options(
+	fx.Provide(NewPathService),
 	fx.Provide(NewStorage),
 	fx.Provide(user.New),
 	fx.Invoke(user.Initialize),
