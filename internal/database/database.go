@@ -1,6 +1,9 @@
 package database
 
 import (
+	"log"
+	"os"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
@@ -8,6 +11,11 @@ import (
 )
 
 func New() (*gorm.DB, error) {
+	if err := os.MkdirAll("data", os.ModeDir); err != nil {
+		log.Println("cannot create data directory")
+		return nil, err
+	}
+
 	db, err := gorm.Open("sqlite3", "data/data.db")
 	if err != nil {
 		return nil, err
