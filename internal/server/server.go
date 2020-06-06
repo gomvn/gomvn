@@ -39,8 +39,10 @@ func New(conf *config.App, ps *service.PathService, storage *service.Storage, us
 	api.Put("/users/:id", server.handleApiPutUsers)
 	api.Get("/users/:id/token", server.handleApiGetUsersToken)
 
-	app.Put("/*", middleware.NewPutAuth(us, ps), server.handlePut)
+	app.Put("/*", middleware.NewRepoAuth(us, ps, true), server.handlePut)
 	app.Get("/", server.handleIndex)
+
+	app.Use(middleware.NewRepoAuth(us, ps, false))
 	app.Static("/", storage.GetRoot(), fiber.Static{
 		Browse: true,
 	})

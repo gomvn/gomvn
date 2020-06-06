@@ -11,7 +11,7 @@ import (
 	"github.com/gomvn/gomvn/internal/service/user"
 )
 
-func NewPutAuth(us *user.Service, ps *service.PathService) func(*fiber.Ctx) {
+func NewRepoAuth(us *user.Service, ps *service.PathService, needsDeploy bool) func(*fiber.Ctx) {
 	return basicauth.New(basicauth.Config{
 		Authorizer: func(c *fiber.Ctx, name string, token string) bool {
 			u, err := us.GetByName(name)
@@ -34,7 +34,7 @@ func NewPutAuth(us *user.Service, ps *service.PathService) func(*fiber.Ctx) {
 
 			current = "/" + current
 			for _, path := range paths {
-				if strings.HasPrefix(current, path.Path) && path.Deploy {
+				if strings.HasPrefix(current, path.Path) && (path.Deploy || !needsDeploy) {
 					return true
 				}
 			}
