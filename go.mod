@@ -3,6 +3,7 @@ module github.com/gomvn/gomvn
 go 1.14
 
 require (
+	github.com/gofiber/basicauth v0.2.0
 	github.com/gofiber/compression v0.2.0
 	github.com/gofiber/fiber v1.10.5
 	github.com/gofiber/logger v0.2.2

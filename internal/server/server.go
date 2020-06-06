@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/template/html"
 
 	"github.com/gomvn/gomvn/internal/config"
+	"github.com/gomvn/gomvn/internal/server/middleware"
 	"github.com/gomvn/gomvn/internal/service"
 	"github.com/gomvn/gomvn/internal/service/user"
 )
@@ -33,6 +34,7 @@ func New(conf *config.App, storage *service.Storage, us *user.Service) *Server {
 	}
 
 	api := app.Group("/api")
+	api.Use(middleware.NewApiAuth(us))
 	api.Post("/users", server.handleApiPostUsers)
 	api.Put("/users/:id", server.handleApiPutUsers)
 	api.Get("/users/:id/token", server.handleApiGetUsersToken)
