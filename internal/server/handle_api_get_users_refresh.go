@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber"
 )
 
-func (s *Server) handleApiGetUsersToken(c *fiber.Ctx) {
+func (s *Server) handleApiGetUsersRefresh(c *fiber.Ctx) {
 	id, err := strconv.ParseUint(c.Params("id"), 10, 32)
 	if err != nil {
 		c.Status(fiber.StatusBadRequest).SendString(err.Error())

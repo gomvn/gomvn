@@ -36,9 +36,11 @@ func New(conf *config.App, ps *service.PathService, storage *service.Storage, us
 
 	api := app.Group("/api")
 	api.Use(middleware.NewApiAuth(us))
+	api.Get("/users", server.handleApiGetUsers)
 	api.Post("/users", server.handleApiPostUsers)
 	api.Put("/users/:id", server.handleApiPutUsers)
-	api.Get("/users/:id/token", server.handleApiGetUsersToken)
+	api.Delete("/users/:id", server.handleApiDeleteUsers)
+	api.Get("/users/:id/refresh", server.handleApiGetUsersRefresh)
 
 	app.Put("/*", middleware.NewRepoAuth(us, ps, true), server.handlePut)
 	app.Get("/", server.handleIndex)

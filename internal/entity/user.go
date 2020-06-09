@@ -11,4 +11,6 @@ type User struct {
 	TokenHash string    `gorm:"size:60;not null"`
 	CreatedAt time.Time `gorm:"not null"`
 	UpdatedAt time.Time `gorm:"not null"`
+
+	Paths []Path
 }
